@@ -7,7 +7,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "gen": "babel-node --presets es2015 ./scripts/generator",
+    "gen:component": "npm run gen -- component",
+    "gen:container": "npm run gen -- container",
+    "gen:action": "npm run gen -- action-async",
+    "gen:reducer": "npm run gen -- reducer",
+    "gen:action-sync": "npm run gen -- action-sync"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,7 +28,13 @@
     "redux-form": "^7.4.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-expo": "^5.0.0",
+    "camelcase": "^5.0.0",
+    "chalk": "^2.4.1",
+    "generator-tvg-react-templates": "^0.1.0",
+    "inquirer": "^6.2.0",
     "jest-expo": "^31.0.0",
     "yo": "^2.0.5"
   }
