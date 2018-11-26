@@ -1,3 +1,4 @@
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { lstatSync, readdirSync } from 'fs';
@@ -29,7 +30,20 @@ const PASCAL_CASE_TEMPLATES = [
 	'component',
 	'container',
 ];
+// Standard outputs
+const COMMENT_WARNING = `/*
+*  This file is dynamically updated.
+*  Try to avoid manually updating this file, instead,
+*  try using [npm run gen] script.
+*/
+`;
 
+/*
+*	Private methods
+*/
+
+// Maps Yeoman template names
+// to their appropriate directory in this repository
 function mapTemplateToContext({ parentName, templateName }) {
 	return {
 		'action-async': `${REDUCERS_PATH}/${parentName}/actions`,
@@ -40,7 +54,31 @@ function mapTemplateToContext({ parentName, templateName }) {
 	}[templateName];
 };
 
+// Updates the proper index file to make sure that newly created modules
+// are properly imported/exported to be useful
+function updateIndexFile({ templateName, moduleName, parentName }) {
+	const INDEX_PATH = `${mapTemplateToContext({ parentName, templateName })}/index.js`;
+	const indexFileText = readFileSync(INDEX_PATH, 'utf8');
+	// Split index file text into an array of export lines
+	const exportLines = indexFileText.split('export')
+		.filter(line => line.includes(' from ')) // filter out non-export lines
+		.map(line => `export ${line.trim().replace(/\;/g, '')};`); // format export lines
+	// Add comment at beginning of file
+	exportLines.unshift(COMMENT_WARNING);
+	// Add new export line at end of file
+	if (templateName !== 'reducer') {	
+		exportLines.push(`export ${moduleName} from './${moduleName}';`);
+	} else {
+		exportLines.push(`export { reducer as ${moduleName} } from './${moduleName}';`);
+	}
+	// Join into a string
+	const updatedIndexFileText = exportLines.join('\n') + '\n';
+	// Write back to index file
+	return writeFileSync(INDEX_PATH, updatedIndexFileText);
+}
+
 (async function interactiveGenerator() {
+	// Interactive prompt menu
 	const { moduleName, templateName = TEMPLATE_NAME, parentName } = await prompt([
 		// Get template name (if applicable)
 		{
@@ -72,16 +110,8 @@ function mapTemplateToContext({ parentName, templateName }) {
 			when: ({ templateName = TEMPLATE_NAME }) => templateName.includes('action') && EXISTING_REDUCER_NAMES.length > 0,
 		},
 	]);
-	// Base yeoman commands
-	const commands = [
-		YEOMAN_PATH,
-		'tvg-react-templates',
-		`--moduleName=${moduleName}`,
-		`--templateName=${templateName}`,
-		`--parentName=${parentName}`,
-		`--context=${mapTemplateToContext({ parentName, templateName })}`,
-	];
-	// Throw error for action with no parent
+
+	// Handle action with no parent
 	if (templateName.includes('action')) {
 		if (!parentName) {
 			return console.error(
@@ -93,5 +123,19 @@ function mapTemplateToContext({ parentName, templateName }) {
 			);
 		}
 	};
+
+	// Build and execute Yeoman command
+	const context = mapTemplateToContext({ parentName, templateName });
+	const commands = [
+		YEOMAN_PATH,
+		'tvg-react-templates',
+		`--moduleName=${moduleName}`,
+		`--templateName=${templateName}`,
+		`--parentName=${parentName}`,
+		`--context=${context}`,
+	];
 	execSync(commands.join(' '), { stdio: [0, 1, 2] });
+
+	// Update index files
+	updateIndexFile({ templateName, moduleName, parentName });
 })();

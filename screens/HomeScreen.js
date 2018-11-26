@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
-import { MonoText } from '@components/StyledText';
+import { StyledText } from '@components';
 import robotDev from '@assets/images/robot-dev.png';
 import robotProd from '@assets/images/robot-prod.png';
 
@@ -36,7 +36,7 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.getStartedText}>Get started by opening</Text>
 
             <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
+              <StyledText style={styles.codeHighlightText}>screens/HomeScreen.js</StyledText>
             </View>
 
             <Text style={styles.getStartedText}>
@@ -55,7 +55,7 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
 
           <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
+            <StyledText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</StyledText>
           </View>
         </View>
       </View>

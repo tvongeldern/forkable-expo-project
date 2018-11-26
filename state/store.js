@@ -1,11 +1,11 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { reducer as clientReducer } from './reducer';
+import * as reducers from './reducers';
 import middleware from './middleware';
 
 const appReducer = combineReducers({
 	form: formReducer,
-	store: clientReducer,
+	...reducers,
 });
 
 export default createStore(
