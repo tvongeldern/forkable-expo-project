@@ -56,8 +56,8 @@ function mapTemplateToContext({ parentName, templateName }) {
 
 // Updates the proper index file to make sure that newly created modules
 // are properly imported/exported to be useful
-function updateIndexFile({ templateName, moduleName, parentName }) {
-	const INDEX_PATH = `${mapTemplateToContext({ parentName, templateName })}/index.js`;
+function updateExportFile({ templateName, moduleName, parentName, fileName, importName }) {
+	const INDEX_PATH = `${mapTemplateToContext({ parentName, templateName })}/${fileName}`;
 	const indexFileText = readFileSync(INDEX_PATH, 'utf8');
 	// Split index file text into an array of export lines
 	const exportLines = indexFileText.split('export')
@@ -66,7 +66,9 @@ function updateIndexFile({ templateName, moduleName, parentName }) {
 	// Add comment at beginning of file
 	exportLines.unshift(COMMENT_WARNING);
 	// Add new export line at end of file
-	if (templateName !== 'reducer') {	
+	if (templateName.includes('action')) {
+		exportLines.push(`export { ${importName} as ${moduleName} } from './${moduleName}';`);
+	} else if (templateName !== 'reducer') {
 		exportLines.push(`export ${moduleName} from './${moduleName}';`);
 	} else {
 		exportLines.push(`export { reducer as ${moduleName} } from './${moduleName}';`);
@@ -136,6 +138,10 @@ function updateIndexFile({ templateName, moduleName, parentName }) {
 	];
 	execSync(commands.join(' '), { stdio: [0, 1, 2] });
 
-	// Update index files
-	updateIndexFile({ templateName, moduleName, parentName });
+	// Update export files
+	updateExportFile({ templateName, moduleName, parentName, fileName: 'index.js', importName: 'actionCreator' });
+	// additional export file update for redux actions
+	if (templateName.includes('action')) {
+		updateExportFile({ templateName, moduleName, parentName, fileName: 'reducers.js', importName: 'reducer' });
+	}
 })();
