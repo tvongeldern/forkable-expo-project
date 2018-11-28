@@ -1,5 +1,4 @@
 import { AsyncStorage } from 'react-native';
-import config from '../config';
 
 // JSON modifiers for AsyncStorage middleware
 function jsonParse(value) {
@@ -36,11 +35,12 @@ export default function middleware() {
 			}
 			// If action is an object, it will be an ajax call
 			const {
-				fetch,
-				storage,
+				promise = {},
 				types,
 				...rest
 			} = action;
+			// Async actions can make AJAX or LocalStorage calls
+			const { fetch, storage } = promise;
 			// Dispatch standard action objects as-is
 			if (!types) {
 				return next(action);
@@ -50,7 +50,7 @@ export default function middleware() {
 			const [REQUEST, SUCCESS, FAILURE] = types;
 			// Dispatch AJAX calls
 			if (fetch) {
-				const requestUrl = config.apiUrl + fetch.url;
+				const requestUrl = fetch.url;
 				// REQUEST will be dispatched first
 				next({ ...rest, type: REQUEST });
 				return FETCH_API(requestUrl, {
@@ -63,12 +63,15 @@ export default function middleware() {
 					body: fetch.data && JSON.stringify(fetch.data),
 				})
 					.then(response => {
+						// Prevents middleware from trying to turn
+						// splash pages into JSON
 						if (response.status === 404) {
 							return Promise.reject({
 								status: 404,
 								error: 'Resource not found',
 							});
 						}
+						// Resolve empty for status 204
 						if (response.status === 204) {
 							return Promise.resolve();
 						}

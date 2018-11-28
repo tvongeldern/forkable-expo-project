@@ -6,3 +6,4 @@
 
 export StyledText from './StyledText';
 export TabBarIcon from './TabBarIcon';
+export Screen from './Screen';

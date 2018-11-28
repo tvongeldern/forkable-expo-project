@@ -24,6 +24,7 @@
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-navigation": "^2.18.2",
+    "react-redux": "^5.1.1",
     "redux": "^4.0.1",
     "redux-form": "^7.4.2"
   },
@@ -33,7 +34,7 @@
     "babel-preset-expo": "^5.0.0",
     "camelcase": "^5.0.0",
     "chalk": "^2.4.1",
-    "generator-tvg-react-templates": "^0.1.0",
+    "generator-tvg-react-templates": "^0.1.1",
     "inquirer": "^6.2.0",
     "jest-expo": "^31.0.0",
     "yo": "^2.0.5"

@@ -1,4 +1,2 @@
-export default {
-	fontFamily: 'space-mono',
-};
+export default {};
 
