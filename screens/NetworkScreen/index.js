@@ -10,7 +10,12 @@ import {
 
 class NetworkScreen extends React.Component {
 	static propTypes = {
+		connectionTest: PropTypes.func.isRequired,
+	}
 
+	componentDidMount() {
+		const { connectionTest } = this.props;
+		connectionTest();
 	}
 
 	render() {
@@ -23,5 +28,5 @@ class NetworkScreen extends React.Component {
 		);
 	}
 }
-export default NetworkScreen;
-// export default connect(mapStateToProps, mapDispatchToProps)(NetworkScreen);
+
+export default connect(mapStateToProps, mapDispatchToProps)(NetworkScreen);

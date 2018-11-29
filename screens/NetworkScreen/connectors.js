@@ -1,4 +1,4 @@
-// import {} from '@state/actions';
+import { connectionTest } from '@state/reducers/demo';
 
 export function mapStateToProps(state) {
 	return {
@@ -7,5 +7,5 @@ export function mapStateToProps(state) {
 }
 
 export const mapDispatchToProps = {
-
+	connectionTest,
 };

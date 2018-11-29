@@ -1,5 +1,9 @@
 import { AsyncStorage } from 'react-native';
 
+/*
+*	Private methods
+*/
+
 // JSON modifiers for AsyncStorage middleware
 function jsonParse(value) {
 	try {
@@ -16,31 +20,78 @@ function jsonStringify(value) {
 	}
 	return value || '';
 }
-//
 
-const FETCH_API = fetch;
+// Fetch API wrapper
+// Handles JSON and XML responses
+function handleFetchResponse(response) {
+	// Prevents middleware from trying to turn
+	// splash pages into JSON
+	if (response.status === 404) {
+		return Promise.reject({
+			status: 404,
+			error: 'Resource not found',
+		});
+	}
+	// Resolve empty for status 204
+	if (response.status === 204) {
+		return Promise.resolve();
+	}
+	return response.json()
+		.then(parsedResponse => {
+			if (parsedResponse && parsedResponse.status > 399) {
+				return Promise.reject(parsedResponse);
+			}
+			return parsedResponse;
+		});
+}
+// Prototype
+function WrappedFetchApi() {
+	// GET
+	this.get = (uri) => fetch(uri)
+		.then(handleFetchResponse);
+	// POST
+	this.post = (uri, { body }) => fetch(uri, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json; charset=utf-8' },
+			body: jsonStringify(body),
+		}).then(handleFetchResponse);
+	// PUT
+	this.put = (uri, { body }) => fetch(uri, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json; charset=utf-8' },
+			body: jsonStringify(body),
+		}).then(handleFetchResponse);
+	// DELETE
+	this.delete = (uri) => fetch(uri, { method: 'DELETE' })
+		.then(handleFetchResponse);
+	// Default
+	return (uri, config) => fetch(uri, config).then(handleFetchResponse);
+}
+
+// Filling in fetch and storage API's
+const FETCH_API = new WrappedFetchApi();
 const STORAGE_API = {
-	set: (key, value) => AsyncStorage.setItem(key, jsonStringify(value)),
-	get: (key) => AsyncStorage.getItem(key).then(jsonParse),
+	set: (key, value) => AsyncStorage.setItem(key, jsonStringify({ value })),
+	get: (key) => AsyncStorage.getItem(key).then(({ value }) => jsonParse(value)),
 	remove: AsyncStorage.removeItem,
 };
+
+/*
+*	Public middleware method
+*/
 
 export default function middleware() {
 	return ({ dispatch, getState }) => {
 		return next => action => {
-			// For actionCreators that are just functions,
-			// apply them directly
+			// For actions that are functions, dispatch them
 			if (typeof action === 'function') {
 				return action(dispatch, getState);
 			}
-			// If action is an object, it will be an ajax call
 			const {
-				promise = {},
+				promise,
 				types,
 				...rest
 			} = action;
-			// Async actions can make AJAX or LocalStorage calls
-			const { fetch, storage } = promise;
 			// Dispatch standard action objects as-is
 			if (!types) {
 				return next(action);
@@ -48,69 +99,19 @@ export default function middleware() {
 			// Async actions will have an array of 3 types
 			// which will always be provided in order
 			const [REQUEST, SUCCESS, FAILURE] = types;
-			// Dispatch AJAX calls
-			if (fetch) {
-				const requestUrl = fetch.url;
-				// REQUEST will be dispatched first
-				next({ ...rest, type: REQUEST });
-				return FETCH_API(requestUrl, {
-					credentials: 'include',
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: fetch.method || 'GET',
-					body: fetch.data && JSON.stringify(fetch.data),
-				})
-					.then(response => {
-						// Prevents middleware from trying to turn
-						// splash pages into JSON
-						if (response.status === 404) {
-							return Promise.reject({
-								status: 404,
-								error: 'Resource not found',
-							});
-						}
-						// Resolve empty for status 204
-						if (response.status === 204) {
-							return Promise.resolve();
-						}
-						return response.json()
-					})
-					// Dispatch SUCCESS if call succeeds
-					.then(response => {
-						// Determine success.failure based on response status
-						const isFailure = response && response.status > 399;
-						// Save response to local storage key if one is specified
-						// or delete local storage key if it was a DELETE call
-						if (fetch.localStorageKey) {
-							if (fetch.method === 'DELETE') {
-								STORAGE_API.remove(fetch.localStorageKey);
-							} else {
-								STORAGE_API.set(fetch.localStorageKey, response);
-							}
-						}
-						return next({
-							...rest,
-							response,
-							type: isFailure ? FAILURE : SUCCESS,
-							error: isFailure ? response.message || response.status : null,
-						});
-					})
-					// Dispatch FAILURE if call fails
-					.catch(error => next({
-						...rest,
-						error,
-						type: FAILURE,
-					}));
-			}
-			// Dispatch AsyncStorage requests
-			if (storage) {
-				next({ ...rest, type: REQUEST });
-				return storage(STORAGE_API)
-					.then(data => next({ ...rest, data, type: SUCCESS }))
-					.catch(error => next({ ...rest, error, type: FAILURE }));
-			}
+			// REQUEST will be dispatched first
+			next({ ...rest, type: REQUEST });
+			return promise({ fetch: FETCH_API, storage: STORAGE_API })
+				.then((response) => next({
+					...rest,
+					response,
+					type: SUCCESS,
+				}))
+				.catch((error) => next({
+					...rest,
+					error,
+					type: FAILURE,
+				}));
 		}
 	}
 }

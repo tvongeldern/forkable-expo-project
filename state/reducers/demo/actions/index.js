@@ -4,4 +4,4 @@
 *  try using [npm run gen] script.
 */
 
-export { reducer as demo } from './demo';
+export { actionCreator as connectionTest } from './connectionTest';
