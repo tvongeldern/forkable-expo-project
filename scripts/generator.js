@@ -11,6 +11,7 @@ const ROOT_PATH = path.join(__dirname, '../');
 const YEOMAN_PATH = `${ROOT_PATH}/node_modules/.bin/yo`;
 const COMPONENTS_PATH = `${ROOT_PATH}/components`;
 const CONTAINERS_PATH = `${ROOT_PATH}/screens`;
+const FORMS_PATH = `${ROOT_PATH}/forms`;
 const STATE_PATH = `${ROOT_PATH}/state`;
 const REDUCERS_PATH = `${STATE_PATH}/reducers`;
 // File system state
@@ -23,12 +24,14 @@ const VALID_TEMPLATE_NAMES = [
 	'component',
 	'container',
 	'action-async',
+	'form',
 	'reducer',
 	'action-sync',
 ];
 const PASCAL_CASE_TEMPLATES = [
 	'component',
 	'container',
+	'form',
 ];
 // Standard outputs
 const COMMENT_WARNING = `/*
@@ -51,6 +54,7 @@ function mapTemplateToContext({ parentName, templateName }) {
 		reducer: REDUCERS_PATH,
 		component: COMPONENTS_PATH,
 		container: CONTAINERS_PATH,
+		form: FORMS_PATH,
 	}[templateName];
 };
 

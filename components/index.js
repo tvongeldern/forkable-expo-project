@@ -7,3 +7,5 @@
 export StyledText from './StyledText';
 export TabBarIcon from './TabBarIcon';
 export Screen from './Screen';
+export Button from './Button';
+export StatusButton from './StatusButton';

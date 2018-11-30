@@ -1,8 +1,8 @@
 import { connectionTest } from '@state/reducers/demo';
 
-export function mapStateToProps(state) {
+export function mapStateToProps({ demo }) {
 	return {
-
+		connectionTestStatus: demo.connectionTestStatus,
 	};
 }
 

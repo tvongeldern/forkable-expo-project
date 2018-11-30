@@ -2,9 +2,7 @@ import { aggregateReducers } from 'utils';
 import * as reducers from './actions/reducers';
 
 const initialState = {
-	connectionTested: false,
-	connectionTestPending: false,
-	connectionTestPassed: false,
+	connectionTestStatus: -1,
 };
 
 const aggregatedReducer = aggregateReducers(reducers);

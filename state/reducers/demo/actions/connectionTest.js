@@ -5,22 +5,19 @@ const types = {
 };
 
 export const reducer = {
-	[types.start]: (state, action) => ({
+	[types.start]: (state) => ({
 		...state,
-		connectionTestPending: true,
-		connectionTestPassed: false,
+		connectionTestStatus: 1,
 	}),
 	[types.success]: (state, action) => ({
 		...state,
-		connectionTested: true,
-		connectionTestPending: false,
-		connectionTestPassed: true,
+		connectionTestStatus: 2,
+		apiResponse: action.response, // API responses will always be stored as action.response
 	}),
 	[types.fail]: (state, action) => ({
 		...state,
-		connectionTested: true,
-		connectionTestPending: false,
-		connectionTestPassed: false,
+		connectionTestStatus: 0,
+		error: action.error,
 	}),
 };
 

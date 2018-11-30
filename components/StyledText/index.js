@@ -10,7 +10,7 @@ export default function StyledText(props) {
 	} = props;
 
 	return (
-		<Text {...rest} style={[style, styles]} />
+		<Text {...rest} style={[styles.text, style]} />
 	);
 }
 
