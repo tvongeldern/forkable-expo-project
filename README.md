@@ -30,9 +30,11 @@ Other generators available are:
 <br/>
 `npm run gen:container` - Generate a smart container
 <br/>
-`npm run gen:reducer` - Generate a Redux reducer
-<br/>
 `npm run gen:action` - Generate an async Redux action
+<br/>
+`npm run gen:form` - Generate a form
+<br/>
+`npm run gen:reducer` - Generate a Redux reducer
 <br/>
 `npm run gen:action-sync` - Generate a synchronous Redux action
 <br/>
