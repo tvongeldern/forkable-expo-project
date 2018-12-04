@@ -37,6 +37,8 @@ const FOCUSED_INPUT_BORDER_WIDTH = 2;
 const styles = StyleSheet.create({
 	container: {
 		paddingVertical: 4,
+		borderColor: 'red',
+		width: '100%',
 	},
 	activeInput: {
 		borderColor: Colors.blue,

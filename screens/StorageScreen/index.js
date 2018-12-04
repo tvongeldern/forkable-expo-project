@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import { mapStateToProps, mapDispatchToProps } from './connectors';
 import {
 	Screen,
+	StyledText,
 } from '@components';
+import { StorageForm } from '@forms';
 
 class StorageScreen extends React.Component {
 	static propTypes = {
-
+		saveToStorage: PropTypes.func.isRequired,
 	}
 
 	render() {
@@ -17,7 +19,7 @@ class StorageScreen extends React.Component {
 
 		return (
 			<Screen>
-
+				<StorageForm onSubmit={console.log} />
 			</Screen>
 		);
 	}

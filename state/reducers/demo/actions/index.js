@@ -5,3 +5,4 @@
 */
 
 export { actionCreator as connectionTest } from './connectionTest';
+export { actionCreator as saveToStorage } from './saveToStorage';

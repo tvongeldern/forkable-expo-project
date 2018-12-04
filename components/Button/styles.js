@@ -3,7 +3,7 @@ import Colors from '@constants/Colors';
 
 export default StyleSheet.create({
 	button: {
-		backgroundColor: Colors.textColor,
+		backgroundColor: Colors.blue,
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
