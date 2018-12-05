@@ -14,13 +14,15 @@
     "gen:action": "npm run gen -- action-async",
     "gen:reducer": "npm run gen -- reducer",
     "gen:action-sync": "npm run gen -- action-sync",
-    "gen:form": "npm run gen -- form"
+    "gen:form": "npm run gen -- form",
+    "lint": "eslint components screens state forms constants App.js"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@expo/vector-icons": "^8.0.0",
     "expo": "^31.0.2",
     "prop-types": "^15.6.2",
     "react": "16.5.0",
@@ -46,6 +48,7 @@
     "generator-tvg-react-templates": "^1.1.1",
     "inquirer": "^6.2.0",
     "jest-expo": "^31.0.0",
+    "react-test-renderer": "^16.6.3",
     "yo": "^2.0.5"
   }
 }

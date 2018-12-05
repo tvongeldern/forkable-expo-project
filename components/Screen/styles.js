@@ -6,6 +6,6 @@ export default StyleSheet.create({
 		backgroundColor: Colors.backgroundColor,
 		flex: 1,
 		alignItems: 'flex-start',
-		padding: 8,
+		padding: 16,
 	},
 });

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
 
-export default {
+export default StyleSheet.create({
 	marginBottom: -3,
-};
+});

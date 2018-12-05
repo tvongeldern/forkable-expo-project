@@ -5,6 +5,6 @@ export default {
 		fontSize: 20,
 		fontWeight: '500',
 		color: Colors.textColor,
-		margin: 8,
+		marginVertical: 8,
 	},
 };

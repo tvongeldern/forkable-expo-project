@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'expo';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '@constants/Colors';
 import styles from './styles';
 
@@ -11,7 +11,7 @@ export default function TabBarIcon(props) {
 	} = props;
 
 	return (
-		<Icon.Ionicons
+		<MaterialCommunityIcons
 			name={name}
 			size={26}
 			style={styles}

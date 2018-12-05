@@ -29,6 +29,11 @@ module.exports = {
 		'react/jsx-filename-extension': 0,
 		'import/no-unresolved': 1, // eslint config cannot handle aliases with the @ character in them
 		'react/forbid-prop-types': 0,
-		'arrow-parens': 'as-needed',
+		'arrow-parens': 0,
+		'class-methods-use-this': 1,
+		'react/jsx-closing-bracket-location': 0,
+		'react/jsx-indent-props': [1, 'tab'],
+		'prefer-promise-reject-errors': 0,
+		'arrow-body-style': 1,
 	},
 };

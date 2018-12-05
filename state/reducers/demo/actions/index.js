@@ -6,3 +6,4 @@
 
 export { actionCreator as connectionTest } from './connectionTest';
 export { actionCreator as saveToStorage } from './saveToStorage';
+export { actionCreator as readFromStorage } from './readFromStorage';

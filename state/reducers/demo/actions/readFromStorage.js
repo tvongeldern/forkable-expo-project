@@ -1,7 +1,7 @@
 const types = {
-	start: 'actions/demo/saveToStorage/start',
-	success: 'actions/demo/saveToStorage/success',
-	fail: 'actions/demo/saveToStorage/fail',
+	start: 'actions/demo/readFromStorage/start',
+	success: 'actions/demo/readFromStorage/success',
+	fail: 'actions/demo/readFromStorage/fail',
 };
 
 export const reducer = {
@@ -12,7 +12,7 @@ export const reducer = {
 		...state,
 		storage: {
 			...state.storage,
-			[action.key]: action.value,
+			[action.key]: action.response,
 		},
 	}),
 	[types.fail]: (state) => ({
@@ -20,9 +20,8 @@ export const reducer = {
 	}),
 };
 
-export const actionCreator = (key, value) => ({
+export const actionCreator = (key) => ({
 	types: [types.start, types.success, types.fail],
-	promise: ({ storage }) => storage.set(key, value),
+	promise: ({ storage }) => storage.get(key),
 	key,
-	value,
 });

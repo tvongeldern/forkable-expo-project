@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, reset } from 'redux-form';
 
 import TextInput from './components/TextInput';
 import { Button } from '@components';
@@ -10,10 +10,13 @@ import { required } from './validation';
 import { formatPhoneNumber } from './formatters';
 import { parsePhoneNumber } from './parsers';
 
-function StorageForm(props) {
+const FORM_NAME = 'DemoForm';
+const fullScreen = { width: '100%' };
+
+function DemoForm(props) {
 	const { handleSubmit } = props;
 	return (
-		<View style={{ width: '100%' }}>
+		<View style={fullScreen}>
 			<Field
 				label="Your Name"
 				name="yourName"
@@ -30,11 +33,13 @@ function StorageForm(props) {
 	);
 }
 
-StorageForm.propTypes = {
+DemoForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 };
 
 export default reduxForm({
-	form: 'StorageForm',
-})(StorageForm);
-
+	form: FORM_NAME,
+	onSubmitSuccess: (result, dispatch) => {
+		dispatch(reset(FORM_NAME));
+	},
+})(DemoForm);

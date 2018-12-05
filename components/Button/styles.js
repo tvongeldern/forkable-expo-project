@@ -10,8 +10,8 @@ export default StyleSheet.create({
 		alignItems: 'center',
 		paddingVertical: 8,
 		paddingHorizontal: 48,
-		alignSelf: 'center',
-		margin: 8,
+		alignSelf: 'flex-start',
+		marginVertical: 8,
 		borderRadius: 4,
 	},
 	text: {

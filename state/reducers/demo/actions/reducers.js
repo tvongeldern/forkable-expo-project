@@ -6,3 +6,4 @@
 
 export { reducer as connectionTest } from './connectionTest';
 export { reducer as saveToStorage } from './saveToStorage';
+export { reducer as readFromStorage } from './readFromStorage';

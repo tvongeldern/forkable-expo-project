@@ -6,16 +6,13 @@ import { AsyncStorage } from 'react-native';
 
 // JSON modifiers for AsyncStorage middleware
 function jsonParse(value) {
-	try {
-		return JSON.parse(value);
-	} catch (e) {
-		console.error(e);
-		return value;
-	}
+	if (!value) return value;
+	if (typeof value !== 'object') return value;
+	return JSON.parse(value);
 }
 
 function jsonStringify(value) {
-	if (typeof value === 'object') {
+	if (value && typeof value === 'object') {
 		return JSON.stringify(value);
 	}
 	return value || '';
@@ -51,16 +48,16 @@ function WrappedFetchApi() {
 		.then(handleFetchResponse);
 	// POST
 	this.post = (uri, { body }) => fetch(uri, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json; charset=utf-8' },
-			body: jsonStringify(body),
-		}).then(handleFetchResponse);
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json; charset=utf-8' },
+		body: jsonStringify(body),
+	}).then(handleFetchResponse);
 	// PUT
 	this.put = (uri, { body }) => fetch(uri, {
-			method: 'PUT',
-			headers: { 'Content-Type': 'application/json; charset=utf-8' },
-			body: jsonStringify(body),
-		}).then(handleFetchResponse);
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json; charset=utf-8' },
+		body: jsonStringify(body),
+	}).then(handleFetchResponse);
 	// DELETE
 	this.delete = (uri) => fetch(uri, { method: 'DELETE' })
 		.then(handleFetchResponse);
@@ -71,8 +68,8 @@ function WrappedFetchApi() {
 // Filling in fetch and storage API's
 const FETCH_API = new WrappedFetchApi();
 const STORAGE_API = {
-	set: (key, value) => AsyncStorage.setItem(key, jsonStringify({ value })),
-	get: (key) => AsyncStorage.getItem(key).then(({ value }) => jsonParse(value)),
+	set: (key, value) => AsyncStorage.setItem(key, jsonStringify(value)),
+	get: (key) => AsyncStorage.getItem(key).then(response => jsonParse(response)),
 	remove: AsyncStorage.removeItem,
 };
 
@@ -112,6 +109,6 @@ export default function middleware() {
 					error,
 					type: FAILURE,
 				}));
-		}
-	}
+		};
+	};
 }

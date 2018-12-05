@@ -4,4 +4,4 @@
 *  try using [npm run gen] script.
 */
 
-export StorageForm from './StorageForm';
+export DemoForm from './DemoForm';

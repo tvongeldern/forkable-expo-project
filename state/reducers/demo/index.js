@@ -3,6 +3,7 @@ import * as reducers from './actions/reducers';
 
 const initialState = {
 	connectionTestStatus: -1,
+	storage: {},
 };
 
 const aggregatedReducer = aggregateReducers(reducers);

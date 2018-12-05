@@ -10,35 +10,33 @@ import { mapStateToProps, mapDispatchToProps } from './connectors';
 
 function getNetworkStatusText(networkStatus) {
 	switch (networkStatus) {
-		case 0:
-			return 'Connection Failed';
-		case 1:
-			return 'Testing Connection...';
-		case 2:
-			return 'Connection Active!';
-		default:
-			return 'Test Connection';
+	case 0:
+		return 'Connection Failed';
+	case 1:
+		return 'Testing Connection...';
+	case 2:
+		return 'Connection Active!';
+	default:
+		return 'Test Connection';
 	}
 }
 
-class NetworkScreen extends React.Component {
-	static propTypes = {
-		connectionTest: PropTypes.func.isRequired,
-		connectionTestStatus: PropTypes.number.isRequired,
-	}
-
-	render() {
-		const { connectionTest, connectionTestStatus } = this.props;
-		return (
-			<Screen>
-				<StyledText>Press the button below to test your network connection.</StyledText>
-				<StatusButton
-					text={getNetworkStatusText(connectionTestStatus)}
-					status={connectionTestStatus}
-					onPress={connectionTest} />
-			</Screen>
-		);
-	}
+function NetworkScreen(props) {
+	const { connectionTest, connectionTestStatus } = props;
+	return (
+		<Screen>
+			<StyledText>Press the button below to test your network connection.</StyledText>
+			<StatusButton
+				text={getNetworkStatusText(connectionTestStatus)}
+				status={connectionTestStatus}
+				onPress={connectionTest} />
+		</Screen>
+	);
 }
+
+NetworkScreen.propTypes = {
+	connectionTest: PropTypes.func.isRequired,
+	connectionTestStatus: PropTypes.number.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(NetworkScreen);
