@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
+	Robot,
 	Screen,
 	StatusButton,
 	StyledText,
@@ -25,6 +26,7 @@ function NetworkScreen(props) {
 	const { connectionTest, connectionTestStatus } = props;
 	return (
 		<Screen>
+			<Robot />
 			<StyledText>Press the button below to test your network connection.</StyledText>
 			<StatusButton
 				text={getNetworkStatusText(connectionTestStatus)}
